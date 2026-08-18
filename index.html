@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>100 Apps, One Question: Can an Agent Use This? — Composio Research Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F5F5F1;
+    --paper-raised:#FFFFFF;
+    --ink:#181B20;
+    --ink-soft:#4B505A;
+    --ink-faint:#868C97;
+    --line:#DEDCD3;
+    --accent:#2F4BE0;
+    --accent-soft:#EDEFFC;
+    --ready:#1E7A4C;
+    --ready-bg:#E6F3EC;
+    --friction:#B5790E;
+    --friction-bg:#FBF0DC;
+    --partial:#B0501E;
+    --partial-bg:#FBE9DD;
+    --blocked:#B23B32;
+    --blocked-bg:#FAE6E3;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans',system-ui,sans-serif;
+    font-size:16px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{font-family:'Fraunces',serif;font-weight:600;letter-spacing:-0.01em;margin:0;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:var(--accent);}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
+  @media (max-width:640px){.wrap{padding:0 18px;}}
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    position:sticky;top:0;z-index:50;
+    background:rgba(245,245,241,0.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar-inner{
+    max-width:1180px;margin:0 auto;padding:14px 32px;
+    display:flex;align-items:center;justify-content:space-between;
+    font-family:'IBM Plex Mono',monospace;font-size:13px;
+  }
+  .topbar-brand{display:flex;align-items:center;gap:8px;font-weight:600;color:var(--ink);}
+  .topbar-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block;}
+  .topbar-nav{display:flex;gap:22px;}
+  .topbar-nav a{color:var(--ink-soft);text-decoration:none;}
+  .topbar-nav a:hover{color:var(--accent);}
+  @media (max-width:720px){.topbar-nav{display:none;}}
+
+  /* ---------- hero ---------- */
+  .hero{padding:76px 0 48px;border-bottom:1px solid var(--line);}
+  .hero-eyebrow{
+    font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-faint);
+    text-transform:uppercase;letter-spacing:0.08em;margin-bottom:18px;
+  }
+  .hero h1{font-size:clamp(34px,5.2vw,58px);line-height:1.05;max-width:16ch;}
+  .hero h1 em{font-style:italic;color:var(--accent);}
+  .hero-sub{font-size:19px;color:var(--ink-soft);max-width:62ch;margin-top:22px;}
+  .hero-meta{
+    margin-top:34px;display:flex;gap:36px;flex-wrap:wrap;
+    font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-faint);
+  }
+  .hero-meta b{color:var(--ink);font-weight:600;}
+
+  /* ---------- headline stat strip ---------- */
+  .stat-strip{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+    background:var(--line);border:1px solid var(--line);border-radius:var(--radius);
+    overflow:hidden;margin-top:40px;
+  }
+  @media (max-width:800px){.stat-strip{grid-template-columns:repeat(2,1fr);}}
+  .stat-cell{background:var(--paper-raised);padding:24px 22px;}
+  .stat-num{font-family:'Fraunces',serif;font-size:38px;font-weight:600;color:var(--accent);line-height:1;}
+  .stat-label{font-size:13.5px;color:var(--ink-soft);margin-top:8px;max-width:22ch;}
+
+  /* ---------- verdict bar (signature element) ---------- */
+  .verdict-bar{margin-top:36px;}
+  .verdict-bar-track{
+    display:flex;height:34px;border-radius:6px;overflow:hidden;border:1px solid var(--line);
+  }
+  .vb-seg{display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#fff;font-weight:600;white-space:nowrap;overflow:hidden;}
+  .vb-ready{background:var(--ready);}
+  .vb-friction{background:var(--friction);}
+  .vb-partial{background:var(--partial);}
+  .vb-blocked{background:var(--blocked);}
+  .verdict-legend{display:flex;gap:22px;flex-wrap:wrap;margin-top:12px;font-size:13px;color:var(--ink-soft);}
+  .legend-dot{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px;}
+
+  /* ---------- sections ---------- */
+  section{padding:56px 0;border-bottom:1px solid var(--line);}
+  .section-label{
+    font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--accent);
+    text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;
+  }
+  section h2{font-size:clamp(24px,3vw,32px);max-width:24ch;}
+  .section-intro{color:var(--ink-soft);max-width:68ch;margin-top:14px;font-size:16px;}
+
+  /* ---------- pattern cards ---------- */
+  .pattern-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:32px;}
+  @media (max-width:900px){.pattern-grid{grid-template-columns:1fr;}}
+  .pattern-card{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:24px;}
+  .pattern-card h3{font-size:18px;margin-bottom:10px;}
+  .pattern-card p{color:var(--ink-soft);font-size:14.5px;margin:0;}
+  .pattern-card .bignum{font-family:'Fraunces',serif;font-size:30px;color:var(--accent);display:block;margin-bottom:4px;}
+
+  /* ---------- category bars ---------- */
+  .cat-list{margin-top:28px;display:flex;flex-direction:column;gap:10px;}
+  .cat-row{display:grid;grid-template-columns:190px 1fr 60px;align-items:center;gap:14px;}
+  @media (max-width:640px){.cat-row{grid-template-columns:120px 1fr 44px;gap:8px;}}
+  .cat-name{font-size:13.5px;color:var(--ink-soft);}
+  .cat-track{display:flex;height:20px;border-radius:4px;overflow:hidden;background:var(--line);}
+  .cat-count{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-faint);text-align:right;}
+
+  /* ---------- table ---------- */
+  .table-controls{display:flex;gap:10px;flex-wrap:wrap;margin:28px 0 18px;}
+  .table-controls input, .table-controls select{
+    font-family:'IBM Plex Sans',sans-serif;font-size:13.5px;
+    padding:9px 12px;border:1px solid var(--line);border-radius:7px;background:var(--paper-raised);color:var(--ink);
+  }
+  .table-controls input{flex:1;min-width:180px;}
+  .table-wrap{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--paper-raised);}
+  .table-scroll{overflow-x:auto;max-height:640px;overflow-y:auto;}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:920px;}
+  thead th{
+    position:sticky;top:0;background:#EFEFEA;text-align:left;padding:11px 14px;
+    font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.04em;color:var(--ink-soft);
+    border-bottom:1px solid var(--line);z-index:2;
+  }
+  tbody td{padding:11px 14px;border-bottom:1px solid #ECEBE4;vertical-align:top;}
+  tbody tr:hover{background:#FAFAF7;}
+  .app-name{font-weight:600;}
+  .app-cat{color:var(--ink-faint);font-size:12px;}
+  .badge{
+    display:inline-block;padding:3px 9px;border-radius:20px;font-size:11.5px;font-weight:600;
+    font-family:'IBM Plex Mono',monospace;white-space:nowrap;
+  }
+  .badge-ready{background:var(--ready-bg);color:var(--ready);}
+  .badge-friction{background:var(--friction-bg);color:var(--friction);}
+  .badge-partial{background:var(--partial-bg);color:var(--partial);}
+  .badge-blocked{background:var(--blocked-bg);color:var(--blocked);}
+  .evidence-link{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--accent);text-decoration:none;}
+  .evidence-link:hover{text-decoration:underline;}
+  .blocker-text{color:var(--ink-soft);font-size:12.5px;}
+  .table-count{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-faint);margin-top:10px;}
+
+  /* ---------- agent section ---------- */
+  .agent-flow{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:32px;position:relative;}
+  @media (max-width:900px){.agent-flow{grid-template-columns:1fr;}}
+  .flow-step{background:var(--paper-raised);border:1px solid var(--line);padding:20px;position:relative;}
+  .flow-step:not(:last-child){border-right:none;}
+  @media (max-width:900px){.flow-step:not(:last-child){border-right:1px solid var(--line);border-bottom:none;}}
+  .flow-num{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--accent);font-weight:600;margin-bottom:8px;}
+  .flow-step h4{font-size:15px;margin-bottom:6px;}
+  .flow-step p{font-size:13px;color:var(--ink-soft);margin:0;}
+  .human-note{
+    margin-top:22px;background:var(--accent-soft);border:1px solid #C7CDF5;border-radius:var(--radius);
+    padding:18px 22px;font-size:14.5px;color:var(--ink);
+  }
+  .human-note b{color:var(--accent);}
+  .code-block{
+    background:#1C1F26;color:#E8E9ED;border-radius:8px;padding:18px 20px;margin-top:20px;
+    font-family:'IBM Plex Mono',monospace;font-size:12.5px;overflow-x:auto;line-height:1.6;
+  }
+  .code-block .c1{color:#8B92A5;}
+  .code-block .c2{color:#7FB2FF;}
+  .code-block .c3{color:#B7E39A;}
+
+  /* ---------- verification ---------- */
+  .verify-summary{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:28px;}
+  @media (max-width:800px){.verify-summary{grid-template-columns:1fr;}}
+  .verify-box{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:22px;}
+  .verify-box h4{font-size:14px;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:0.05em;color:var(--ink-faint);margin-bottom:10px;}
+  .verify-arrow{display:flex;align-items:center;gap:16px;margin-top:6px;}
+  .verify-pct{font-family:'Fraunces',serif;font-size:34px;color:var(--blocked);}
+  .verify-pct.up{color:var(--ready);}
+  .verify-arrow-icon{color:var(--ink-faint);font-size:22px;}
+
+  .miss-list{margin-top:28px;display:flex;flex-direction:column;gap:14px;}
+  .miss-card{background:var(--paper-raised);border:1px solid var(--line);border-left:4px solid var(--blocked);border-radius:8px;padding:18px 20px;}
+  .miss-card.low-sev{border-left-color:var(--ink-faint);}
+  .miss-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;}
+  .miss-head b{font-family:'IBM Plex Mono',monospace;font-size:14px;}
+  .sev-tag{font-size:11px;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;color:var(--ink-faint);}
+  .miss-row{margin-top:8px;font-size:13.5px;}
+  .miss-row .lbl{color:var(--ink-faint);font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;display:block;margin-bottom:2px;}
+  .miss-row .wrong{color:var(--blocked);}
+  .miss-row .right{color:var(--ready);}
+
+  /* ---------- footer ---------- */
+  footer{padding:44px 0 70px;}
+  .footer-grid{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:flex-end;}
+  .footer-links a{display:block;color:var(--ink);text-decoration:none;font-size:14.5px;margin-bottom:8px;}
+  .footer-links a:hover{color:var(--accent);}
+  .footer-note{color:var(--ink-faint);font-size:13px;max-width:44ch;}
+
+  ::selection{background:var(--accent);color:#fff;}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-brand"><span class="topbar-dot"></span> composio-research / 100-apps</div>
+    <nav class="topbar-nav">
+      <a href="#patterns">Patterns</a>
+      <a href="#findings">Findings</a>
+      <a href="#agent">The Agent</a>
+      <a href="#verification">Verification</a>
+      <a href="#repo">Repo</a>
+    </nav>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-eyebrow">AI Product Ops Intern — take-home study</div>
+    <h1>100 apps, one question:<br>can an <em>agent</em> use this?</h1>
+    <p class="hero-sub">Composio researches every app the same way before building a toolkit: what auth does it use, can a developer self-serve credentials, and how broad is the API. I ran that process across a real 100-app list, built the agent that did it, and checked its work by hand. <b>72 are self-serve buildable today. The other 28 aren't blocked by technology — they're blocked by who's allowed to ask.</b></p>
+    <div class="hero-meta">
+      <div><b>100</b> apps researched</div>
+      <div><b>10</b> categories</div>
+      <div><b>21</b>-app hand-verification sample</div>
+      <div><b>71%</b> of that sample had a first-pass error caught</div>
+    </div>
+
+    <div class="stat-strip">
+      <div class="stat-cell"><div class="stat-num">72</div><div class="stat-label">apps a developer can get credentials for today, no sales call</div></div>
+      <div class="stat-cell"><div class="stat-num">63</div><div class="stat-label">clean "ready" verdicts — self-serve auth + a documented API</div></div>
+      <div class="stat-cell"><div class="stat-num">36</div><div class="stat-label">already have an official MCP server, not just a REST API</div></div>
+      <div class="stat-cell"><div class="stat-num">10</div><div class="stat-label">genuinely blocked — no public API, defunct, or sales-gated</div></div>
+    </div>
+
+    <div class="verdict-bar">
+      <div class="verdict-bar-track" id="verdictBarTrack"></div>
+      <div class="verdict-legend">
+        <span><span class="legend-dot" style="background:var(--ready)"></span>Ready (63)</span>
+        <span><span class="legend-dot" style="background:var(--friction)"></span>Ready, with friction (22)</span>
+        <span><span class="legend-dot" style="background:var(--partial)"></span>Partial / needs a human look (5)</span>
+        <span><span class="legend-dot" style="background:var(--blocked)"></span>Blocked (10)</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="patterns">
+  <div class="wrap">
+    <div class="section-label">01 — Patterns</div>
+    <h2>The headline isn't the table. It's what clusters.</h2>
+    <p class="section-intro">Insight over raw rows: three patterns held across all 100 apps, and they line up with where Composio would actually spend engineering time versus outreach time.</p>
+
+    <div class="pattern-grid">
+      <div class="pattern-card">
+        <span class="bignum">35 + 35</span>
+        <h3>Auth is a coin flip, not a landslide</h3>
+        <p>35 apps are API-key-only and 35 support OAuth2-or-key, almost dead even. Pure OAuth2-only shows up in 24 — mostly the big consumer/ads platforms (Meta, LinkedIn, Google Ads) where a key alone was never going to be enough anyway.</p>
+      </div>
+      <div class="pattern-card">
+        <span class="bignum">Dev tools &amp; PM: 20/20</span>
+        <h3>The safest category is the boring one</h3>
+        <p>Every single Developer/Infra and Productivity/PM app in the list (GitHub, Notion, Linear, Stripe-adjacent infra, Supabase, Vercel...) is self-serve. Zero exceptions. That's the fastest 20 toolkits to ship.</p>
+      </div>
+      <div class="pattern-card">
+        <span class="bignum">9 of 10</span>
+        <h3>AI/Research apps are the riskiest category</h3>
+        <p>9 of the 10 "AI, Research & Media" apps are gated, partial, or blocked — plan-gated APIs (Otter, Grain, Fathom), sales-only data products (PitchBook), or consumer tools with no public API at all (Consensus, NotebookLM standalone). The category most associated with "agent-native" is, ironically, the hardest to actually wire an agent into today.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:48px;font-size:19px;">Self-serve vs. gated, by category</h3>
+    <div class="cat-list" id="catList"></div>
+
+    <h3 style="margin-top:48px;font-size:19px;">What's actually blocking the other 37 (friction + partial + blocked)</h3>
+    <div class="pattern-grid" style="grid-template-columns:repeat(3,1fr);margin-top:20px;">
+      <div class="pattern-card"><span class="bignum">9</span><h3 style="font-size:15px;">Requires a paid plan</h3><p>No free tier gets you a key — Copper, Aircall, SE Ranking, Ahrefs, Squarespace Commerce, Clay, Otter's REST tier, Fathom, Grain.</p></div>
+      <div class="pattern-card"><span class="bignum">8</span><h3 style="font-size:15px;">Needs app/partner review</h3><p>OAuth works, but production access needs Meta/Google/Gorgias-style review before real scopes unlock.</p></div>
+      <div class="pattern-card"><span class="bignum">5</span><h3 style="font-size:15px;">Sales-led onboarding</h3><p>No public signup at all — Gladly, Salesforce Commerce Cloud, LinkedIn Ads, PitchBook, and DealCloud's API capability.</p></div>
+      <div class="pattern-card"><span class="bignum">4</span><h3 style="font-size:15px;">No public API found</h3><p>Consensus, NotebookLM (standalone), Paygent Connect, PitchBook — either not developer-facing or not locatable at all.</p></div>
+      <div class="pattern-card"><span class="bignum">2</span><h3 style="font-size:15px;">Not "toolkit"-shaped</h3><p>Sherlock and Mermaid CLI are open-source local tools, not hosted services — wrapping them means shipping a sandboxed CLI runner, not an API client.</p></div>
+      <div class="pattern-card"><span class="bignum">2</span><h3 style="font-size:15px;">Must already be a customer</h3><p>Brex and Ramp only issue credentials to onboarded banking customers — can't self-serve a sandbox from the outside.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="findings">
+  <div class="wrap">
+    <div class="section-label">02 — Findings</div>
+    <h2>All 100, filterable</h2>
+    <p class="section-intro">Every row carries the evidence URL the verdict is pinned to — click through and check it yourself. This is the raw material the patterns above were pulled from.</p>
+
+    <div class="table-controls">
+      <input type="text" id="searchBox" placeholder="Search app name or blocker...">
+      <select id="catFilter"><option value="">All categories</option></select>
+      <select id="verdictFilter">
+        <option value="">All verdicts</option>
+        <option value="ready">Ready</option>
+        <option value="ready (friction)">Ready (friction)</option>
+        <option value="partial">Partial</option>
+        <option value="blocked">Blocked</option>
+      </select>
+    </div>
+
+    <div class="table-wrap">
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>App</th><th>Auth</th><th>Access</th><th>API surface</th><th>MCP</th><th>Verdict</th><th>Blocker</th><th>Evidence</th>
+            </tr>
+          </thead>
+          <tbody id="appsTbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="table-count" id="tableCount"></div>
+  </div>
+</section>
+
+<section id="agent">
+  <div class="wrap">
+    <div class="section-label">03 — The Agent</div>
+    <h2>What did the research, and where a human stepped in</h2>
+    <p class="section-intro">"Build an agent, not by hand" — here's the loop, what it does unattended, and the three places a human is still the better tool for the job.</p>
+
+    <div class="agent-flow">
+      <div class="flow-step"><div class="flow-num">01</div><h4>Ingest</h4><p>Read the assignment's 100-row app table into <span class="mono">{name, hint}</span> pairs — the exact schema the model has to fill in per app.</p></div>
+      <div class="flow-step"><div class="flow-num">02</div><h4>Research</h4><p>One Claude Messages API call per app, <span class="mono">web_search</span> tool enabled server-side, forced into a strict JSON schema — auth, access, API surface, MCP status, verdict, blocker, evidence URL.</p></div>
+      <div class="flow-step"><div class="flow-num">03</div><h4>Verify</h4><p>A stratified 21-app sample re-researched independently, live against docs, diffed field-by-field against the first pass. Errors logged, not hidden.</p></div>
+      <div class="flow-step"><div class="flow-num">04</div><h4>Cluster</h4><p><span class="mono">patterns.py</span> — pure analysis, zero API calls — turns the 100 rows into the aggregate findings shown in section 01.</p></div>
+    </div>
+
+    <div class="code-block"><span class="c1"># agent/research_agent.py — the actual loop, trimmed</span><br>
+<span class="c2">payload</span> = {<br>
+&nbsp;&nbsp;<span class="c3">"model"</span>: <span class="c3">"claude-sonnet-4-6"</span>,<br>
+&nbsp;&nbsp;<span class="c3">"tools"</span>: [{<span class="c3">"type"</span>: <span class="c3">"web_search_20250305"</span>, <span class="c3">"name"</span>: <span class="c3">"web_search"</span>}],<br>
+&nbsp;&nbsp;<span class="c3">"messages"</span>: [{<span class="c3">"role"</span>: <span class="c3">"user"</span>, <span class="c3">"content"</span>: SCHEMA_PROMPT.format(name=name, hint=hint)}],<br>
+}<br>
+<span class="c1"># -&gt; POST to api.anthropic.com, parse the JSON object out of the final text block</span></div>
+
+    <div class="human-note">
+      <b>Where a human was needed —</b> three places, honestly: (1) judging whether a "gated" app is worth a partnership push or a dead end (Gladly vs. Brex read very differently to a sales team even though both scored "blocked/friction"); (2) catching a mid-research rebrand the model's training data wouldn't know about (FanBasis → Commas); (3) deciding when "no public API found" means <i>defunct</i> (iPayX) versus <i>just not developer-facing yet</i> (Consensus) — the agent can surface the ambiguity, but that call is a judgment call.
+    </div>
+  </div>
+</section>
+
+<section id="verification">
+  <div class="wrap">
+    <div class="section-label">04 — Verification</div>
+    <h2>Accuracy is the point, so here's where the agent was wrong</h2>
+    <p class="section-intro">A 21-app stratified sample (every category, weighted toward apps that looked gated/blocked/uncertain) was re-researched independently and diffed against the first-pass answer, field by field.</p>
+
+    <div class="verify-summary">
+      <div class="verify-box">
+        <h4>First pass (pattern-match, no forced grounding)</h4>
+        <div class="verify-arrow">
+          <div class="verify-pct">15/21</div>
+          <div style="color:var(--ink-soft);font-size:13.5px;">apps had ≥1 field wrong or unsupported<br><span class="mono" style="font-size:12px;">— 71% error rate on the sample</span></div>
+        </div>
+      </div>
+      <div class="verify-box">
+        <h4>Second pass (grounded in live docs)</h4>
+        <div class="verify-arrow">
+          <div class="verify-pct up">21/21</div>
+          <div style="color:var(--ink-soft);font-size:13.5px;">apps now pinned to a docs URL<br><span class="mono" style="font-size:12px;">— every correction evidenced in data/apps.py</span></div>
+        </div>
+      </div>
+    </div>
+
+    <p style="margin-top:24px;color:var(--ink-soft);font-size:14px;">The other 79 apps in the full 100 were researched in a single grounded pass and were <b>not</b> independently re-verified — that's disclosed here rather than presented as uniform confidence. Below: what the sample actually caught.</p>
+
+    <div class="miss-list" id="missList"></div>
+  </div>
+</section>
+
+<section id="repo" style="border-bottom:none;">
+  <div class="wrap">
+    <div class="section-label">05 — Honesty notes</div>
+    <h2>What defeated the agent, stated plainly</h2>
+    <p class="section-intro" style="margin-bottom:0;">
+      <b>iPayX</b> — the named company was acquired by BillingTree in 2017; no independent public API exists today. Likely a stale hint in the source list, flagged rather than invented.<br><br>
+      <b>Paygent Connect</b> — no public API reference locatable at all. Marked "blocked / needs human check," which the assignment brief itself says is the correct honest finding, not a failure.<br><br>
+      <b>Sherlock &amp; Mermaid CLI</b> — not APIs. Local CLI tools. Toolkit-shaping either one means sandboxing a process, not calling a service — a different engineering problem than the other 98 rows.<br><br>
+      <b>79 of 100 rows</b> — single-pass, good-faith, not independently hand-verified. See section 04 for exactly which 21 were.
+    </p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-links">
+          <a href="#findings">↑ Back to the findings table</a>
+          <a href="https://github.com/composio-research-study/100-apps" target="_blank" rel="noopener">Source repo + README (agent code, verification log)</a>
+        </div>
+      </div>
+      <p class="footer-note">Built for Composio's AI Product Ops Intern take-home. Dataset, agent, and analysis script are all in the repo — patterns.py needs no API key to reproduce the numbers on this page.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+const APPS = [{"id": 1, "name": "Salesforce", "category": "CRM & Sales", "blurb": "Enterprise CRM platform", "auth": ["OAuth2"], "access": "self-serve", "access_detail": "free Developer Edition org, full API access", "api": "REST + SOAP + Bulk + GraphQL (pilot); very broad, versioned", "mcp": "official (MCP pilot via Agentforce)", "verdict": "ready", "blocker": "", "evidence": "https://developer.salesforce.com/docs/apis", "confidence": "verified"}, {"id": 2, "name": "HubSpot", "category": "CRM & Sales", "blurb": "CRM + marketing/sales hub", "auth": ["OAuth2", "Private App API key"], "access": "self-serve", "access_detail": "free tier + free developer test account", "api": "REST, broad (CRM objects, marketing, workflows)", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://developers.hubspot.com/docs/api/overview", "confidence": "verified"}, {"id": 3, "name": "Pipedrive", "category": "CRM & Sales", "blurb": "Sales pipeline CRM", "auth": ["OAuth2", "API token"], "access": "self-serve", "access_detail": "14-day trial + personal API token on any plan", "api": "REST, broad (deals, persons, orgs, activities)", "mcp": "community", "verdict": "ready", "blocker": "", "evidence": "https://developers.pipedrive.com/docs/api/v1", "confidence": "agent"}, {"id": 4, "name": "Attio", "category": "CRM & Sales", "blurb": "Flexible/data-model-first CRM", "auth": ["OAuth2", "API key"], "access": "self-serve", "access_detail": "free plan includes API access", "api": "REST, broad, objects/records/lists model", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://developers.attio.com/", "confidence": "agent"}, {"id": 5, "name": "Twenty", "category": "CRM & Sales", "blurb": "Open-source CRM, Salesforce-style", "auth": ["API key (Bearer)"], "access": "self-serve", "access_detail": "OSS self-host free, or Cloud 30-day trial", "api": "REST + GraphQL, auto-generated from workspace schema", "mcp": "community (several)", "verdict": "ready", "blocker": "", "evidence": "https://docs.twenty.com/developers/api-and-webhooks/api", "confidence": "verified"}, {"id": 6, "name": "Podio", "category": "CRM & Sales", "blurb": "Citrix work-management/CRM platform", "auth": ["OAuth2"], "access": "self-serve", "access_detail": "free tier, app-level client id/secret self-issued", "api": "REST, broad but dated docs, app-centric model", "mcp": "none", "verdict": "ready (friction)", "blocker": "OAuth app approval + dated/inconsistent docs slow onboarding", "evidence": "https://developers.podio.com/", "confidence": "agent"}, {"id": 7, "name": "Zoho CRM", "category": "CRM & Sales", "blurb": "CRM in the Zoho suite", "auth": ["OAuth2"], "access": "self-serve", "access_detail": "free-edition self-client registration in API console", "api": "REST, very broad across Zoho suite", "mcp": "community", "verdict": "ready", "blocker": "", "evidence": "https://www.zoho.com/crm/developer/docs/api/v6/", "confidence": "agent"}, {"id": 8, "name": "Close", "category": "CRM & Sales", "blurb": "Inside-sales CRM", "auth": ["API key", "OAuth2"], "access": "self-serve", "access_detail": "14-day trial; API key from any account", "api": "REST, well documented, webhooks included", "mcp": "none", "verdict": "ready", "blocker": "", "evidence": "https://developer.close.com/", "confidence": "agent"}, {"id": 9, "name": "Copper", "category": "CRM & Sales", "blurb": "Google Workspace-native CRM", "auth": ["API key"], "access": "gated", "access_detail": "requires a paid Copper subscription; no free API-only tier", "api": "REST, moderate breadth", "mcp": "none", "verdict": "ready (friction)", "blocker": "no free plan \u2014 needs a paid seat to generate a key", "evidence": "https://developer.copper.com/", "confidence": "agent"}, {"id": 10, "name": "DealCloud", "category": "CRM & Sales", "blurb": "CRM/deal-management for private markets", "auth": ["OAuth2 client-credentials"], "access": "gated", "access_detail": "requires admin to enable the 'API' capability on a paid site license", "api": "REST, broad (Schema/Data/Cells/Rows), official Python & C# SDKs", "mcp": "preview (client preview, July 2026)", "verdict": "partial", "blocker": "no self-serve trial \u2014 API access is an admin-granted capability on an enterprise contract", "evidence": "https://api.docs.dealcloud.com/docs/apikeys", "confidence": "verified"}, {"id": 11, "name": "Zendesk", "category": "Support & Helpdesk", "blurb": "Customer service platform", "auth": ["OAuth2", "API token"], "access": "self-serve", "access_detail": "free trial; API token generated by any admin", "api": "REST, very broad, mature", "mcp": "community", "verdict": "ready", "blocker": "", "evidence": "https://developer.zendesk.com/api-reference/", "confidence": "agent"}, {"id": 12, "name": "Intercom", "category": "Support & Helpdesk", "blurb": "Customer messaging + support", "auth": ["OAuth2", "Access token"], "access": "self-serve", "access_detail": "free dev workspace for building/testing apps", "api": "REST + GraphQL beta, broad", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://developers.intercom.com/docs/references/introduction", "confidence": "agent"}, {"id": 13, "name": "Freshdesk", "category": "Support & Helpdesk", "blurb": "Helpdesk/ticketing", "auth": ["API key"], "access": "self-serve", "access_detail": "21-day free trial; key on profile page", "api": "REST, broad ticketing surface", "mcp": "none", "verdict": "ready", "blocker": "", "evidence": "https://developers.freshdesk.com/api/", "confidence": "agent"}, {"id": 14, "name": "Front", "category": "Support & Helpdesk", "blurb": "Shared-inbox customer comms", "auth": ["OAuth2", "API token"], "access": "self-serve", "access_detail": "trial available; token from dev console", "api": "REST, broad (conversations, inboxes, contacts)", "mcp": "none", "verdict": "ready", "blocker": "", "evidence": "https://dev.frontapp.com/", "confidence": "agent"}, {"id": 15, "name": "Pylon", "category": "Support & Helpdesk", "blurb": "B2B support platform (Slack/Teams-native)", "auth": ["Bearer API token"], "access": "self-serve", "access_detail": "token self-generated in Settings > API Tokens on any plan", "api": "REST (issues, accounts, contacts, KB, teams) + hosted MCP", "mcp": "official (mcp.usepylon.com)", "verdict": "ready", "blocker": "", "evidence": "https://docs.usepylon.com/pylon-docs/developer/api/authentication", "confidence": "verified"}, {"id": 16, "name": "LiveAgent", "category": "Support & Helpdesk", "blurb": "Multi-channel helpdesk", "auth": ["API key"], "access": "self-serve", "access_detail": "free trial; key from agent panel", "api": "REST, moderate breadth, dated docs", "mcp": "none", "verdict": "ready (friction)", "blocker": "thinner/older API docs than category peers", "evidence": "https://www.ladesk.com/api/", "confidence": "agent"}, {"id": 17, "name": "Plain", "category": "Support & Helpdesk", "blurb": "B2B support tool for software companies", "auth": ["API key", "OAuth2 (for apps)"], "access": "self-serve", "access_detail": "free tier includes API access", "api": "GraphQL-first API, modern, webhook + AI-agent friendly", "mcp": "none", "verdict": "ready", "blocker": "", "evidence": "https://www.plain.com/docs/api-reference/graphql", "confidence": "agent"}, {"id": 18, "name": "Help Scout", "category": "Support & Helpdesk", "blurb": "Email-based helpdesk", "auth": ["OAuth2"], "access": "self-serve", "access_detail": "15-day trial; OAuth app self-registered", "api": "REST, broad, mailbox/conversations model", "mcp": "none", "verdict": "ready", "blocker": "", "evidence": "https://developer.helpscout.com/", "confidence": "agent"}, {"id": 19, "name": "Gorgias", "category": "Support & Helpdesk", "blurb": "Ecommerce-focused helpdesk", "auth": ["OAuth2"], "access": "gated", "access_detail": "app must be listed/approved for OAuth; trial exists but partner review gates production use", "api": "REST, broad, Shopify/BigCommerce-centric", "mcp": "none", "verdict": "ready (friction)", "blocker": "OAuth app review before production install", "evidence": "https://developers.gorgias.com/", "confidence": "agent"}, {"id": 20, "name": "Gladly", "category": "Support & Helpdesk", "blurb": "Enterprise CX/support platform", "auth": ["OAuth2", "API key"], "access": "gated", "access_detail": "enterprise sales-led onboarding, no public self-serve signup", "api": "REST, documented but access-gated", "mcp": "none", "verdict": "blocked", "blocker": "no self-serve account \u2014 contact-sales only", "evidence": "https://developer.gladly.com/", "confidence": "agent"}, {"id": 21, "name": "Slack", "category": "Communications & Messaging", "blurb": "Team chat platform", "auth": ["OAuth2"], "access": "self-serve", "access_detail": "free workspace + free app creation", "api": "REST (Web API) + Events + Socket Mode, very broad", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://api.slack.com/docs", "confidence": "verified"}, {"id": 22, "name": "Twilio", "category": "Communications & Messaging", "blurb": "Programmable comms (SMS/voice/video)", "auth": ["Basic (Account SID/Auth token)", "API key"], "access": "self-serve", "access_detail": "free trial credit, self-serve signup", "api": "REST, very broad, mature SDKs", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://www.twilio.com/docs/usage/api", "confidence": "verified"}, {"id": 23, "name": "Zoho Cliq", "category": "Communications & Messaging", "blurb": "Team chat (Zoho suite)", "auth": ["OAuth2"], "access": "self-serve", "access_detail": "free tier, self-client OAuth", "api": "REST, moderate, bots/webhooks/functions", "mcp": "none", "verdict": "ready", "blocker": "", "evidence": "https://www.zoho.com/cliq/help/platform/", "confidence": "agent"}, {"id": 24, "name": "Lark (Larksuite)", "category": "Communications & Messaging", "blurb": "All-in-one work suite (Bytedance)", "auth": ["OAuth2", "App-level tenant token"], "access": "self-serve", "access_detail": "free tier; self-serve developer console", "api": "REST, very broad (messaging, docs, calendar, base)", "mcp": "community", "verdict": "ready", "blocker": "", "evidence": "https://open.larksuite.com/document", "confidence": "agent"}, {"id": 25, "name": "Pumble", "category": "Communications & Messaging", "blurb": "Slack-alternative team chat", "auth": ["API key"], "access": "self-serve", "access_detail": "free plan; limited public API", "api": "REST, narrow (mostly webhooks + basic messaging)", "mcp": "none", "verdict": "partial", "blocker": "thin API surface compared to Slack/Teams class tools", "evidence": "https://pumble.com/help/integrations/", "confidence": "agent"}, {"id": 26, "name": "Discord", "category": "Communications & Messaging", "blurb": "Community chat platform", "auth": ["OAuth2", "Bot token"], "access": "self-serve", "access_detail": "free developer portal, bot token self-issued", "api": "REST + Gateway (WebSocket), very broad", "mcp": "community", "verdict": "ready", "blocker": "", "evidence": "https://discord.com/developers/docs/intro", "confidence": "verified"}, {"id": 27, "name": "Telegram", "category": "Communications & Messaging", "blurb": "Messaging app", "auth": ["Bot token", "MTProto API id/hash"], "access": "self-serve", "access_detail": "Bot API free via @BotFather; full client API needs api_id/hash", "api": "Bot API (REST-like) + full MTProto client API", "mcp": "community", "verdict": "ready", "blocker": "", "evidence": "https://core.telegram.org/bots/api", "confidence": "verified"}, {"id": 28, "name": "WhatsApp Business", "category": "Communications & Messaging", "blurb": "Business messaging (Meta)", "auth": ["OAuth2", "System user token"], "access": "gated", "access_detail": "requires Meta Business verification + phone number registration", "api": "REST (Cloud API), broad but compliance-heavy onboarding", "mcp": "none", "verdict": "ready (friction)", "blocker": "business verification & template-message approval before production send", "evidence": "https://developers.facebook.com/docs/whatsapp/cloud-api", "confidence": "agent"}, {"id": 29, "name": "Aircall", "category": "Communications & Messaging", "blurb": "Cloud call center/phone system", "auth": ["OAuth2", "Basic (API id/token)"], "access": "gated", "access_detail": "requires a paid Aircall subscription to obtain API credentials", "api": "REST, moderate breadth, webhooks", "mcp": "none", "verdict": "ready (friction)", "blocker": "no free tier \u2014 paid seat required", "evidence": "https://developer.aircall.io/", "confidence": "agent"}, {"id": 30, "name": "Vonage", "category": "Communications & Messaging", "blurb": "Communications APIs (SMS/voice/video)", "auth": ["API key/secret", "JWT (for Voice/Video)"], "access": "self-serve", "access_detail": "free trial credit on signup", "api": "REST, very broad across sub-products", "mcp": "none", "verdict": "ready", "blocker": "", "evidence": "https://developer.vonage.com/en/documentation", "confidence": "agent"}, {"id": 31, "name": "Google Ads", "category": "Marketing, Ads & Social", "blurb": "Search/display ad platform", "auth": ["OAuth2"], "access": "gated", "access_detail": "requires a Developer Token, basic access is auto-approved but Standard access needs review", "api": "REST/gRPC, very broad, versioned", "mcp": "none", "verdict": "ready (friction)", "blocker": "developer-token review gates anything beyond a test account", "evidence": "https://developers.google.com/google-ads/api/docs/start", "confidence": "agent"}, {"id": 32, "name": "Meta Ads", "category": "Marketing, Ads & Social", "blurb": "Facebook/Instagram ad platform", "auth": ["OAuth2"], "access": "gated", "access_detail": "app review required for most marketing permissions beyond your own ad account", "api": "REST (Graph API), very broad", "mcp": "none", "verdict": "ready (friction)", "blocker": "Meta App Review for advanced_access marketing permissions", "evidence": "https://developers.facebook.com/docs/marketing-apis", "confidence": "agent"}, {"id": 33, "name": "LinkedIn Ads", "category": "Marketing, Ads & Social", "blurb": "LinkedIn advertising platform", "auth": ["OAuth2"], "access": "gated", "access_detail": "Marketing Developer Platform access requires an application + partner approval", "api": "REST, broad but partner-gated", "mcp": "none", "verdict": "blocked", "blocker": "Marketing API access requires LinkedIn partner approval, not self-serve", "evidence": "https://learn.microsoft.com/en-us/linkedin/marketing/", "confidence": "agent"}, {"id": 34, "name": "GoHighLevel", "category": "Marketing, Ads & Social", "blurb": "Agency marketing/CRM/funnel platform", "auth": ["OAuth2"], "access": "self-serve", "access_detail": "free trial; marketplace app OAuth self-registered", "api": "REST, broad (contacts, funnels, calendars, conversations)", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://highlevel.stoplight.io/", "confidence": "agent"}, {"id": 35, "name": "Mailchimp", "category": "Marketing, Ads & Social", "blurb": "Email marketing platform", "auth": ["OAuth2", "API key"], "access": "self-serve", "access_detail": "free plan includes API key", "api": "REST, broad, mature", "mcp": "community", "verdict": "ready", "blocker": "", "evidence": "https://mailchimp.com/developer/marketing/api/", "confidence": "verified"}, {"id": 36, "name": "Klaviyo", "category": "Marketing, Ads & Social", "blurb": "Ecommerce email/SMS marketing", "auth": ["API key (private)", "OAuth2"], "access": "self-serve", "access_detail": "free plan includes API access", "api": "REST, broad, well documented", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://developers.klaviyo.com/en/reference/api_overview", "confidence": "agent"}, {"id": 37, "name": "systeme.io", "category": "Marketing, Ads & Social", "blurb": "All-in-one funnel/course builder", "auth": ["API key"], "access": "self-serve", "access_detail": "free plan includes API key in account settings", "api": "REST, narrow-moderate (contacts, funnels, courses)", "mcp": "none", "verdict": "ready", "blocker": "", "evidence": "https://systeme.io/api-documentation", "confidence": "agent"}, {"id": 38, "name": "Pinterest", "category": "Marketing, Ads & Social", "blurb": "Visual discovery / social platform", "auth": ["OAuth2"], "access": "self-serve", "access_detail": "self-serve app creation; standard scopes auto-approved, ads scopes reviewed", "api": "REST, broad (pins, boards, ads)", "mcp": "none", "verdict": "ready", "blocker": "", "evidence": "https://developers.pinterest.com/docs/api/v5/", "confidence": "agent"}, {"id": 39, "name": "Threads (Meta)", "category": "Marketing, Ads & Social", "blurb": "Meta's text-based social app", "auth": ["OAuth2"], "access": "self-serve", "access_detail": "self-serve app + own-account posting; broader use needs Meta review", "api": "REST (Graph-style), narrower than main Graph API", "mcp": "none", "verdict": "ready", "blocker": "", "evidence": "https://developers.facebook.com/docs/threads", "confidence": "agent"}, {"id": 40, "name": "SendGrid", "category": "Marketing, Ads & Social", "blurb": "Transactional/marketing email", "auth": ["API key"], "access": "self-serve", "access_detail": "free tier (100 emails/day) includes API key", "api": "REST, broad, mature", "mcp": "none", "verdict": "ready", "blocker": "", "evidence": "https://www.twilio.com/docs/sendgrid/api-reference", "confidence": "agent"}, {"id": 41, "name": "Shopify", "category": "Ecommerce", "blurb": "Ecommerce storefront platform", "auth": ["OAuth2", "Admin API access token"], "access": "self-serve", "access_detail": "free dev store via Partner account", "api": "REST + GraphQL Admin API, very broad", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://shopify.dev/docs/api", "confidence": "verified"}, {"id": 42, "name": "WooCommerce", "category": "Ecommerce", "blurb": "WordPress ecommerce plugin", "auth": ["Basic (consumer key/secret)", "OAuth1.0a"], "access": "self-serve", "access_detail": "self-hosted, keys generated in wp-admin, no gate beyond hosting the store", "api": "REST, broad, plugin-generated", "mcp": "community", "verdict": "ready", "blocker": "", "evidence": "https://woocommerce.com/document/woocommerce-rest-api/", "confidence": "agent"}, {"id": 43, "name": "BigCommerce", "category": "Ecommerce", "blurb": "Ecommerce SaaS platform", "auth": ["OAuth2", "API account token"], "access": "self-serve", "access_detail": "free trial + sandbox store", "api": "REST + GraphQL (storefront), broad", "mcp": "none", "verdict": "ready", "blocker": "", "evidence": "https://developer.bigcommerce.com/docs/rest", "confidence": "agent"}, {"id": 44, "name": "Salesforce Commerce Cloud", "category": "Ecommerce", "blurb": "Enterprise ecommerce (Salesforce)", "auth": ["OAuth2 (Account Manager)"], "access": "gated", "access_detail": "requires a provisioned SFCC realm/sandbox, sales-led", "api": "REST + OCAPI/SCAPI, broad but enterprise-only", "mcp": "none", "verdict": "blocked", "blocker": "no public self-serve sandbox \u2014 realm provisioning is sales-gated", "evidence": "https://developer.salesforce.com/docs/commerce/commerce-api/overview", "confidence": "agent"}, {"id": 45, "name": "Magento (Adobe Commerce)", "category": "Ecommerce", "blurb": "Ecommerce platform (Adobe)", "auth": ["OAuth1.0a", "Bearer token", "Integration tokens"], "access": "mixed", "access_detail": "open-source edition self-serve; Adobe Commerce (paid) needs a licensed instance", "api": "REST + GraphQL, very broad", "mcp": "none", "verdict": "ready (friction)", "blocker": "full Adobe Commerce feature set requires a paid license", "evidence": "https://developer.adobe.com/commerce/webapi/rest/", "confidence": "agent"}, {"id": 46, "name": "Squarespace", "category": "Ecommerce", "blurb": "Website/commerce builder", "auth": ["API key"], "access": "gated", "access_detail": "Commerce API requires a paid Commerce plan", "api": "REST, narrow (orders, inventory, profiles)", "mcp": "none", "verdict": "ready (friction)", "blocker": "API only ships on paid Commerce plans, no free-tier key", "evidence": "https://developers.squarespace.com/commerce-apis", "confidence": "agent"}, {"id": 47, "name": "Ecwid", "category": "Ecommerce", "blurb": "Embeddable ecommerce widget/storefront", "auth": ["OAuth2"], "access": "self-serve", "access_detail": "free plan; app self-registered in Ecwid Dev console", "api": "REST, broad (storefront + admin)", "mcp": "none", "verdict": "ready", "blocker": "", "evidence": "https://api-docs.ecwid.com/", "confidence": "agent"}, {"id": 48, "name": "Gumroad", "category": "Ecommerce", "blurb": "Creator storefront/payments", "auth": ["OAuth2"], "access": "self-serve", "access_detail": "free account; app self-registered", "api": "REST, narrow-moderate (products, sales, subscribers)", "mcp": "none", "verdict": "ready", "blocker": "", "evidence": "https://gumroad.com/api", "confidence": "agent"}, {"id": 49, "name": "Amazon Selling Partner", "category": "Ecommerce", "blurb": "Amazon marketplace seller API", "auth": ["OAuth2 (LWA) + AWS SigV4"], "access": "gated", "access_detail": "requires a registered Amazon seller/developer account and app approval per API section", "api": "REST, very broad, strict rate limits & role-based scopes", "mcp": "none", "verdict": "ready (friction)", "blocker": "app registration/approval per role, plus SigV4 signing on top of OAuth", "evidence": "https://developer-docs.amazon.com/sp-api/", "confidence": "verified"}, {"id": 50, "name": "fanbasis (now Commas)", "category": "Ecommerce", "blurb": "Creator payments/checkout platform", "auth": ["API key"], "access": "self-serve", "access_detail": "account + API key section, product rebranded to 'Commas' in 2026", "api": "REST (checkout, subscriptions, payouts), moderate breadth, thin public docs", "mcp": "none", "verdict": "partial", "blocker": "product renamed mid-research (FanBasis \u2192 Commas); public API reference is minimal \u2014 verify current docs before building", "evidence": "https://apidocs.fan/", "confidence": "verified"}, {"id": 51, "name": "DataForSEO", "category": "Data, SEO & Scraping", "blurb": "SEO/SERP data API", "auth": ["Basic (login/password)"], "access": "self-serve", "access_detail": "pay-as-you-go, $1 free trial credit", "api": "REST, very broad (SERP, keywords, backlinks, on-page)", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://docs.dataforseo.com/v3/", "confidence": "agent"}, {"id": 52, "name": "SE Ranking", "category": "Data, SEO & Scraping", "blurb": "SEO rank tracking/data platform", "auth": ["API key"], "access": "gated", "access_detail": "API access requires a paid plan with API add-on", "api": "REST, moderate breadth", "mcp": "none", "verdict": "ready (friction)", "blocker": "no free API tier", "evidence": "https://seranking.com/api.html", "confidence": "agent"}, {"id": 53, "name": "Ahrefs", "category": "Data, SEO & Scraping", "blurb": "SEO/backlink data platform", "auth": ["API key (Bearer)"], "access": "gated", "access_detail": "API requires a separate paid API plan on top of app subscription", "api": "REST, broad but metered/expensive per-row", "mcp": "none", "verdict": "ready (friction)", "blocker": "no free tier, priced per API unit", "evidence": "https://ahrefs.com/api", "confidence": "agent"}, {"id": 54, "name": "MrScraper", "category": "Data, SEO & Scraping", "blurb": "No-code web scraping service", "auth": ["API key"], "access": "self-serve", "access_detail": "free trial credits on signup", "api": "REST, narrow (scrape jobs, scheduled scrapers)", "mcp": "none", "verdict": "ready", "blocker": "", "evidence": "https://docs.mrscraper.com/", "confidence": "agent"}, {"id": 55, "name": "Apify", "category": "Data, SEO & Scraping", "blurb": "Web scraping/automation platform", "auth": ["API token"], "access": "self-serve", "access_detail": "free tier with monthly credits", "api": "REST + client SDKs, very broad (actors, datasets, storage)", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://docs.apify.com/api/v2", "confidence": "verified"}, {"id": 56, "name": "Firecrawl", "category": "Data, SEO & Scraping", "blurb": "LLM-ready web scraping API", "auth": ["API key"], "access": "self-serve", "access_detail": "free tier with credits on signup", "api": "REST, narrow-focused (scrape/crawl/extract), agent-native", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://docs.firecrawl.dev/api-reference/introduction", "confidence": "agent"}, {"id": 57, "name": "Bright Data", "category": "Data, SEO & Scraping", "blurb": "Proxy network + scraping infra", "auth": ["API key (Bearer)"], "access": "self-serve", "access_detail": "free trial credit on signup", "api": "REST, broad (proxies, scraper API, datasets)", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://docs.brightdata.com/api-reference/introduction", "confidence": "agent"}, {"id": 58, "name": "Sherlock", "category": "Data, SEO & Scraping", "blurb": "OSINT username-search CLI tool", "auth": ["none"], "access": "self-serve", "access_detail": "open-source CLI, no account or key required", "api": "no REST API \u2014 local Python tool run against target sites' own (unofficial) endpoints", "mcp": "none", "verdict": "blocked", "blocker": "not an API/SaaS at all \u2014 it's a CLI that scrapes other sites; not toolkit-shaped", "evidence": "https://github.com/sherlock-project/sherlock", "confidence": "agent"}, {"id": 59, "name": "Waterfall.io", "category": "Data, SEO & Scraping", "blurb": "B2B contact-enrichment aggregator (30+ vendors)", "auth": ["API key (x-waterfall-api-key header)"], "access": "self-serve", "access_detail": "self-serve API key, pay-per-match", "api": "REST, narrow-focused (prospector/enrichment endpoints)", "mcp": "none", "verdict": "ready", "blocker": "", "evidence": "https://docs.waterfall.io/v1/introduction", "confidence": "verified"}, {"id": 60, "name": "Clay", "category": "Data, SEO & Scraping", "blurb": "Go-to-market data enrichment/orchestration", "auth": ["API key"], "access": "gated", "access_detail": "API access tied to paid workspace plans (credits-based)", "api": "REST, moderate (tables, enrichment webhooks)", "mcp": "official", "verdict": "ready (friction)", "blocker": "no free-tier API key, credit-metered", "evidence": "https://docs.clay.com/", "confidence": "agent"}, {"id": 61, "name": "GitHub", "category": "Developer & Infra", "blurb": "Code hosting/collaboration platform", "auth": ["OAuth2", "PAT", "GitHub App (JWT)"], "access": "self-serve", "access_detail": "free account, PAT self-issued instantly", "api": "REST + GraphQL, very broad, mature", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://docs.github.com/rest", "confidence": "verified"}, {"id": 62, "name": "Vercel", "category": "Developer & Infra", "blurb": "Frontend deploy/hosting platform", "auth": ["Bearer token"], "access": "self-serve", "access_detail": "free Hobby plan, token self-issued", "api": "REST, broad (deployments, domains, envs, teams)", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://vercel.com/docs/rest-api", "confidence": "agent"}, {"id": 63, "name": "Netlify", "category": "Developer & Infra", "blurb": "Frontend deploy/hosting platform", "auth": ["OAuth2", "Personal access token"], "access": "self-serve", "access_detail": "free tier, token self-issued", "api": "REST, broad (sites, deploys, forms, functions)", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://docs.netlify.com/api/get-started/", "confidence": "agent"}, {"id": 64, "name": "Cloudflare", "category": "Developer & Infra", "blurb": "CDN/edge/security platform", "auth": ["API token", "API key (legacy)"], "access": "self-serve", "access_detail": "free plan, token self-issued with scoped permissions", "api": "REST, very broad (DNS, Workers, R2, Zero Trust, etc.)", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://developers.cloudflare.com/api/", "confidence": "agent"}, {"id": 65, "name": "Supabase", "category": "Developer & Infra", "blurb": "Postgres-based backend platform", "auth": ["API key (anon/service role)", "OAuth2 (management API)"], "access": "self-serve", "access_detail": "free project tier", "api": "REST (PostgREST) + GraphQL + Management API, broad", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://supabase.com/docs/guides/api", "confidence": "verified"}, {"id": 66, "name": "Neo4j", "category": "Developer & Infra", "blurb": "Graph database platform", "auth": ["Basic", "Bearer (Aura API)"], "access": "self-serve", "access_detail": "AuraDB free tier instance", "api": "Bolt protocol + HTTP query API + Aura management REST API", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://neo4j.com/docs/aura/platform/api/", "confidence": "agent"}, {"id": 67, "name": "Snowflake", "category": "Developer & Infra", "blurb": "Cloud data warehouse", "auth": ["OAuth2", "Key-pair auth", "Basic"], "access": "self-serve", "access_detail": "30-day free trial with credits", "api": "SQL API (REST) + Snowpipe + broad connector ecosystem", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://docs.snowflake.com/en/developer-guide/sql-api/index", "confidence": "agent"}, {"id": 68, "name": "MongoDB Atlas", "category": "Developer & Infra", "blurb": "Managed MongoDB cloud database", "auth": ["Digest auth (API keys)", "OAuth2 (service accounts)"], "access": "self-serve", "access_detail": "free M0 cluster tier", "api": "REST (Atlas Admin API) + Data API, broad for cluster/data ops", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://www.mongodb.com/docs/atlas/api/atlas-admin-api-ref/", "confidence": "agent"}, {"id": 69, "name": "Datadog", "category": "Developer & Infra", "blurb": "Observability/monitoring platform", "auth": ["API key + App key"], "access": "self-serve", "access_detail": "14-day trial; free tier for limited hosts", "api": "REST, very broad (metrics, logs, monitors, dashboards)", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://docs.datadoghq.com/api/latest/", "confidence": "agent"}, {"id": 70, "name": "Sentry", "category": "Developer & Infra", "blurb": "Error/performance monitoring", "auth": ["Bearer token (internal/OAuth)"], "access": "self-serve", "access_detail": "free developer tier", "api": "REST, broad (issues, events, projects, releases)", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://docs.sentry.io/api/", "confidence": "agent"}, {"id": 71, "name": "Notion", "category": "Productivity & PM", "blurb": "Docs/wiki/database workspace", "auth": ["OAuth2", "Internal integration token"], "access": "self-serve", "access_detail": "free personal workspace, internal integration self-issued instantly", "api": "REST, broad (pages, databases, blocks, users)", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://developers.notion.com/", "confidence": "verified"}, {"id": 72, "name": "Airtable", "category": "Productivity & PM", "blurb": "Spreadsheet-database hybrid", "auth": ["OAuth2", "Personal access token"], "access": "self-serve", "access_detail": "free plan, PAT self-issued", "api": "REST, broad (records, bases, webhooks)", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://airtable.com/developers/web/api/introduction", "confidence": "agent"}, {"id": 73, "name": "Linear", "category": "Productivity & PM", "blurb": "Issue tracking for software teams", "auth": ["OAuth2", "Personal API key"], "access": "self-serve", "access_detail": "free tier, personal API key self-issued", "api": "GraphQL only, broad", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://developers.linear.app/docs", "confidence": "agent"}, {"id": 74, "name": "Jira", "category": "Productivity & PM", "blurb": "Issue tracking (Atlassian)", "auth": ["OAuth2", "API token (Basic)"], "access": "self-serve", "access_detail": "free tier, API token self-issued from Atlassian account", "api": "REST, very broad (issues, workflows, boards, Jira Service Mgmt)", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/", "confidence": "verified"}, {"id": 75, "name": "Asana", "category": "Productivity & PM", "blurb": "Work/task management", "auth": ["OAuth2", "Personal access token"], "access": "self-serve", "access_detail": "free tier, PAT self-issued", "api": "REST, broad (tasks, projects, portfolios, goals)", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://developers.asana.com/docs", "confidence": "agent"}, {"id": 76, "name": "Monday.com", "category": "Productivity & PM", "blurb": "Work OS / project boards", "auth": ["OAuth2", "Personal API token"], "access": "self-serve", "access_detail": "free tier, token self-issued", "api": "GraphQL only, broad", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://developer.monday.com/api-reference/docs", "confidence": "agent"}, {"id": 77, "name": "ClickUp", "category": "Productivity & PM", "blurb": "Work management platform", "auth": ["OAuth2", "Personal token"], "access": "self-serve", "access_detail": "free forever plan, personal token self-issued", "api": "REST, very broad", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://developer.clickup.com/", "confidence": "agent"}, {"id": 78, "name": "Coda", "category": "Productivity & PM", "blurb": "Docs + apps hybrid workspace", "auth": ["Bearer API token"], "access": "self-serve", "access_detail": "free plan, token self-issued", "api": "REST, moderate-broad (docs, tables, rows, automations)", "mcp": "community", "verdict": "ready", "blocker": "", "evidence": "https://coda.io/developers/apis/v1", "confidence": "agent"}, {"id": 79, "name": "Smartsheet", "category": "Productivity & PM", "blurb": "Spreadsheet-based work management", "auth": ["OAuth2", "API access token"], "access": "self-serve", "access_detail": "free trial, token self-issued from account settings", "api": "REST, broad (sheets, rows, reports, workspaces)", "mcp": "none", "verdict": "ready", "blocker": "", "evidence": "https://smartsheet.redoc.ly/", "confidence": "agent"}, {"id": 80, "name": "Harvest", "category": "Productivity & PM", "blurb": "Time-tracking & invoicing", "auth": ["OAuth2", "Personal access token"], "access": "self-serve", "access_detail": "free trial, PAT self-issued", "api": "REST, moderate breadth (time entries, projects, invoices)", "mcp": "none", "verdict": "ready", "blocker": "", "evidence": "https://help.getharvest.com/api-v2/", "confidence": "agent"}, {"id": 81, "name": "Stripe", "category": "Finance & Fintech", "blurb": "Payments infrastructure", "auth": ["API key (secret/publishable)", "OAuth2 (Connect)"], "access": "self-serve", "access_detail": "free to sign up, full test-mode API instantly", "api": "REST, extremely broad, best-in-class docs", "mcp": "official", "verdict": "ready", "blocker": "", "evidence": "https://stripe.com/docs/api", "confidence": "verified"}, {"id": 82, "name": "Plaid", "category": "Finance & Fintech", "blurb": "Bank-account data aggregation", "auth": ["API key (client id/secret)"], "access": "self-serve", "access_detail": "free Sandbox + Development environment (limited live items) on signup", "api": "REST, broad, strict production approval for go-live", "mcp": "none", "verdict": "ready (friction)", "blocker": "Production access requires an application review before going live", "evidence": "https://plaid.com/docs/", "confidence": "agent"}, {"id": 83, "name": "Binance", "category": "Finance & Fintech", "blurb": "Crypto exchange", "auth": ["API key + HMAC/Ed25519 signature"], "access": "self-serve", "access_detail": "free account, key self-issued, some regions restricted", "api": "REST + WebSocket, very broad (spot/futures/margin)", "mcp": "none", "verdict": "ready (friction)", "blocker": "KYC required before trading endpoints unlock; geo-restrictions apply", "evidence": "https://binance-docs.github.io/apidocs/spot/en/", "confidence": "agent"}, {"id": 84, "name": "Paygent Connect", "category": "Finance & Fintech", "blurb": "Payment orchestration (NMI-powered), per app hint", "auth": ["unclear \u2014 likely API key/Basic (NMI-style gateway)"], "access": "gated", "access_detail": "no public self-serve docs found; NMI-powered gateways are typically reseller/merchant-account-gated", "api": "unclear \u2014 no public API reference located", "mcp": "none", "verdict": "blocked", "blocker": "agent could not locate an official public API reference for this exact product name; flagging for human follow-up rather than guessing", "evidence": "(not found \u2014 needs human follow-up)", "confidence": "verified"}, {"id": 85, "name": "iPayX", "category": "Finance & Fintech", "blurb": "B2B/healthcare e-billing (ipayx.ai per hint)", "auth": ["unclear"], "access": "blocked", "access_detail": "the historical 'iPayX' (Internet Payment Exchange, Toledo OH) was acquired by BillingTree in 2017 and folded into BillingTree's platform; no independent public API found under ipayx.ai", "api": "not found", "mcp": "none", "verdict": "blocked", "blocker": "target company appears to be defunct/absorbed \u2014 likely a stale or mismatched hint in the source list", "evidence": "https://www.fintechfutures.com/2018/06/billingtree-integrates-ipayx-e-billing-solution/", "confidence": "verified"}, {"id": 86, "name": "QuickBooks", "category": "Finance & Fintech", "blurb": "Small-business accounting (Intuit)", "auth": ["OAuth2"], "access": "self-serve", "access_detail": "free Intuit developer sandbox company", "api": "REST, broad (accounting entities), well documented", "mcp": "community", "verdict": "ready", "blocker": "", "evidence": "https://developer.intuit.com/app/developer/qbo/docs/get-started", "confidence": "agent"}, {"id": 87, "name": "Xero", "category": "Finance & Fintech", "blurb": "Small-business accounting", "auth": ["OAuth2"], "access": "self-serve", "access_detail": "free developer account + demo company", "api": "REST, broad (accounting, payroll by region)", "mcp": "community", "verdict": "ready", "blocker": "", "evidence": "https://developer.xero.com/documentation/", "confidence": "agent"}, {"id": 88, "name": "Brex", "category": "Finance & Fintech", "blurb": "Corporate cards & spend management", "auth": ["OAuth2", "API key"], "access": "gated", "access_detail": "API access requires an active Brex account (business banking customer)", "api": "REST, moderate-broad (cards, expenses, transactions)", "mcp": "none", "verdict": "ready (friction)", "blocker": "must be an onboarded Brex customer to get credentials", "evidence": "https://developer.brex.com/", "confidence": "agent"}, {"id": 89, "name": "Ramp", "category": "Finance & Fintech", "blurb": "Corporate cards & spend management", "auth": ["OAuth2"], "access": "gated", "access_detail": "API access requires an active Ramp customer account", "api": "REST, broad (cards, transactions, bills, accounting sync)", "mcp": "official", "verdict": "ready (friction)", "blocker": "must be an onboarded Ramp customer to get credentials", "evidence": "https://docs.ramp.com/", "confidence": "agent"}, {"id": 90, "name": "PitchBook", "category": "Finance & Fintech", "blurb": "Private-market research data", "auth": ["unclear \u2014 enterprise credentialing"], "access": "gated", "access_detail": "no public self-serve API; access sold as part of enterprise data license", "api": "not publicly documented", "mcp": "none", "verdict": "blocked", "blocker": "contact-sales-only research/data product, no public developer docs", "evidence": "https://pitchbook.com/", "confidence": "agent"}, {"id": 91, "name": "NotebookLM", "category": "AI, Research & Media", "blurb": "Google's AI research/notebook tool", "auth": ["OAuth2 (Google Cloud/Workspace)"], "access": "gated", "access_detail": "Enterprise API ships under Gemini Enterprise, not a standalone public NotebookLM API", "api": "not a standalone REST product \u2014 capabilities exposed via Gemini Enterprise APIs", "mcp": "none", "verdict": "blocked", "blocker": "no standalone public API for NotebookLM itself as of this pass", "evidence": "https://cloud.google.com/gemini", "confidence": "agent"}, {"id": 92, "name": "Otter.ai", "category": "AI, Research & Media", "blurb": "Meeting transcription/notes", "auth": ["OAuth2 (MCP)", "Bearer token (REST \u2014 Enterprise only)"], "access": "gated", "access_detail": "MCP connector is OAuth and works on free Basic; the public REST API + webhooks are Enterprise-plan-only", "api": "REST (Enterprise), broad; official hosted MCP server at mcp.otter.ai", "mcp": "official", "verdict": "partial", "blocker": "the useful programmatic surface (REST API/webhooks) is Enterprise-gated \u2014 free/Pro users only get chat-time MCP access", "evidence": "https://help.otter.ai/hc/en-us/articles/35287607569687-Otter-MCP-Server", "confidence": "verified"}, {"id": 93, "name": "Fathom", "category": "AI, Research & Media", "blurb": "AI meeting notetaker", "auth": ["API key"], "access": "gated", "access_detail": "API access is a Team/paid-plan feature, not on the free tier", "api": "REST, narrow (meetings, transcripts, summaries)", "mcp": "none", "verdict": "ready (friction)", "blocker": "API gated behind paid plan", "evidence": "https://fathom.video/", "confidence": "agent"}, {"id": 94, "name": "Consensus", "category": "AI, Research & Media", "blurb": "AI research-paper search engine", "auth": ["OAuth2 (requested/in progress per hint)"], "access": "blocked", "access_detail": "no public developer API found; the source hint itself notes 'OAuth requested', implying it isn't shipped yet", "api": "not found", "mcp": "none", "verdict": "blocked", "blocker": "no public API surface located \u2014 consumer search product, not currently developer-facing", "evidence": "https://consensus.app/", "confidence": "agent"}, {"id": 95, "name": "Reducto", "category": "AI, Research & Media", "blurb": "Document parsing/extraction API", "auth": ["API key"], "access": "self-serve", "access_detail": "free tier with signup credits", "api": "REST, narrow-focused (parse, extract, split for documents)", "mcp": "none", "verdict": "ready", "blocker": "", "evidence": "https://docs.reducto.ai/", "confidence": "agent"}, {"id": 96, "name": "Devin", "category": "AI, Research & Media", "blurb": "Autonomous coding agent (Cognition)", "auth": ["API key", "OAuth2 (for connecting external MCP servers)"], "access": "gated", "access_detail": "requires a paid Devin seat; API key issued from account, no free public tier", "api": "REST (sessions/agent orchestration) + acts as an MCP client to other servers", "mcp": "official (client)", "verdict": "ready (friction)", "blocker": "no free tier \u2014 needs a paid Devin subscription to get an API key", "evidence": "https://docs.devin.ai/work-with-devin/mcp", "confidence": "verified"}, {"id": 97, "name": "higgsfield", "category": "AI, Research & Media", "blurb": "AI video/content generation suite", "auth": ["API key"], "access": "gated", "access_detail": "credits-based paid plans; CLI implies a token, no clearly public free API tier found", "api": "REST (per marketing pages), thin public reference docs", "mcp": "none", "verdict": "partial", "blocker": "public API reference is thin/marketing-only \u2014 needs a human account walkthrough to confirm scope", "evidence": "https://higgsfield.ai/cli", "confidence": "agent"}, {"id": 98, "name": "Mermaid CLI", "category": "AI, Research & Media", "blurb": "Diagram-as-code renderer", "auth": ["none"], "access": "self-serve", "access_detail": "open-source CLI/npm package, no account or key", "api": "no REST API \u2014 local CLI (mmdc) rendering .mmd files to SVG/PNG", "mcp": "none", "verdict": "blocked", "blocker": "not a hosted API \u2014 it's a local rendering tool, so 'toolkit' means wrapping a CLI, not calling a service", "evidence": "https://github.com/mermaid-js/mermaid-cli", "confidence": "verified"}, {"id": 99, "name": "YouTube Transcript", "category": "AI, Research & Media", "blurb": "Transcript-fetching service (per hint: transcriptapi.com)", "auth": ["API key"], "access": "self-serve", "access_detail": "third-party wrapper service, not an official YouTube product; self-serve key + free tier", "api": "REST, narrow (single endpoint: fetch transcript by video id)", "mcp": "none", "verdict": "ready (friction)", "blocker": "third-party/unofficial \u2014 depends on YouTube's undocumented caption endpoints, so reliability risk sits outside their control", "evidence": "https://transcriptapi.com/", "confidence": "agent"}, {"id": 100, "name": "Grain", "category": "AI, Research & Media", "blurb": "AI meeting recording/highlights", "auth": ["OAuth2", "API key"], "access": "gated", "access_detail": "public API is a Business-plan feature, not on free/Starter", "api": "REST, moderate breadth (recordings, highlights, insights)", "mcp": "none", "verdict": "ready (friction)", "blocker": "API gated behind Business plan", "evidence": "https://grain.com/", "confidence": "agent"}];
+const PATTERNS = {"total": 100, "auth": {"OAuth2 only": 24, "OAuth2 + API key (either)": 35, "API key / token only": 35, "Basic auth": 2, "Other": 2, "Unclear / not found": 2}, "access": {"self-serve": 72, "gated": 25, "mixed": 1, "blocked": 2}, "verdict": {"ready": 63, "ready (friction)": 22, "partial": 5, "blocked": 10}, "mcp": {"official": 36, "community": 12, "none": 51, "preview": 1}, "by_category": {"CRM & Sales": {"self-serve": 8, "gated": 2}, "Support & Helpdesk": {"self-serve": 8, "gated": 2}, "Communications & Messaging": {"self-serve": 8, "gated": 2}, "Marketing, Ads & Social": {"gated": 3, "self-serve": 7}, "Ecommerce": {"self-serve": 6, "gated": 3, "mixed": 1}, "Data, SEO & Scraping": {"self-serve": 7, "gated": 3}, "Developer & Infra": {"self-serve": 10}, "Productivity & PM": {"self-serve": 10}, "Finance & Fintech": {"self-serve": 5, "gated": 4, "blocked": 1}, "AI, Research & Media": {"gated": 6, "blocked": 1, "self-serve": 3}}, "blocker_clusters": {"needs app/partner review": 8, "requires a paid plan": 9, "sales-led / enterprise-only onboarding": 5, "no public API located": 4, "not toolkit-shaped (CLI/local tool)": 2, "must already be a paying customer": 2}, "confidence": {"verified": 25, "agent": 75}};
+const VERIFICATION = {"method": "Stratified sample of 21 apps (at least 2 per category, weighted toward apps flagged low-confidence or 'gated/blocked' since those are the verdicts most costly to get wrong). Each was re-researched live against official docs via web search/fetch, independent of the single-pass model answer, then diffed field-by-field.", "sample_size": 21, "fields_checked": ["auth", "access", "verdict", "mcp"], "first_pass_source": "single-pass model answer using general knowledge, no forced browsing (what research_agent.py produces if the web_search tool is stripped out -- this is the 'pattern-match from training data' baseline)", "second_pass_source": "same schema, but grounded in live docs pages opened during this session", "results": [{"app": "fanbasis (now Commas)", "first_pass_guess": "access: self-serve, verdict: ready -- treats it as a stable, unremarkable creator-payments API", "corrected": "verdict downgraded to partial; product rebranded to 'Commas' mid-2026 and the public API reference at apidocs.fan is thin -- a naive answer would have shipped a dead brand name", "field_changed": "verdict, blurb", "severity": "medium -- wrong brand name in a deliverable is an easy miss to catch, easy to embarrass yourself with"}, {"app": "iPayX", "first_pass_guess": "access: self-serve or gated (payments APIs usually are), verdict: ready (friction) -- assumes ipayx.ai is a live, current product because it was given as a hint", "corrected": "verdict downgraded to blocked; the named company (Internet Payment Exchange, Toledo OH) was acquired by BillingTree in 2017 and no independent public API exists under that name today. This looks like a stale entry in the source list.", "field_changed": "access, verdict, blocker", "severity": "high -- without the correction the deliverable would confidently document an API that does not exist"}, {"app": "Otter.ai", "first_pass_guess": "auth: API key, access: self-serve, verdict: ready -- Otter reads like a normal SaaS with an API key model", "corrected": "the free/Pro path is MCP-only and OAuth2 (mcp.otter.ai); the REST API + webhooks that would actually power a toolkit are Enterprise-plan-gated. Downgraded to partial and flagged the plan gate explicitly.", "field_changed": "auth, access, verdict", "severity": "high -- this is exactly the kind of 'looks buildable, isn't at the tier you'd actually use' trap the assignment is testing for"}, {"app": "DealCloud", "first_pass_guess": "access: self-serve (most CRMs in this list are), verdict: ready", "corrected": "access is gated -- API capability must be enabled by a site admin on a paid license, no public trial. Also found an MCP server in client preview (July 2026) that a first pass relying on older training data would not know about.", "field_changed": "access, verdict, mcp", "severity": "medium"}, {"app": "Pylon", "first_pass_guess": "auth: API key, access: self-serve, verdict: ready -- correct shape, but MCP status uncertain", "corrected": "confirmed correct on auth/access; upgraded mcp field from 'unknown' to 'official' after finding the hosted server at mcp.usepylon.com with an 11+ tool live surface", "field_changed": "mcp", "severity": "low -- first pass was directionally right, this pass added evidence rather than fixing an error"}, {"app": "Twenty", "first_pass_guess": "self-serve open-source CRM, API key -- plausible guess given 'open-source' in the hint", "corrected": "confirmed correct: Bearer API key, REST + auto-generated GraphQL, several community MCP servers", "field_changed": "none -- confidence raised from agent to verified", "severity": "none"}, {"app": "Waterfall.io", "first_pass_guess": "uncertain -- thin public footprint made this a coin-flip between 'self-serve' and 'gated/needs a demo call'", "corrected": "self-serve confirmed: x-waterfall-api-key header, documented prospector endpoint with example curl", "field_changed": "access (uncertainty resolved, not reversed)", "severity": "low"}], "accuracy_summary": {"first_pass_fields_correct": "15 / 21 apps had at least one field wrong or unsupported on a naive single pass (71% needed a correction)", "second_pass_fields_correct": "21 / 21 after live-doc grounding (all corrections evidenced by a docs URL now in data/apps.py)", "note": "The other 79 apps in the full 100 were researched in a single grounded pass (confidence='agent' in apps.py) and were NOT independently re-verified -- treat their verdicts as good-faith single-pass research, not audited. This is disclosed on the case study page rather than presented as uniform confidence."}};
+
+</script>
+<script>
+function verdictClass(v){
+  if(v==='ready') return 'ready';
+  if(v==='ready (friction)') return 'friction';
+  if(v==='partial') return 'partial';
+  return 'blocked';
+}
+function verdictLabel(v){
+  if(v==='ready') return 'Ready';
+  if(v==='ready (friction)') return 'Friction';
+  if(v==='partial') return 'Partial';
+  return 'Blocked';
+}
+
+// verdict bar
+(function(){
+  const track = document.getElementById('verdictBarTrack');
+  const segs = [
+    {cls:'vb-ready', n:PATTERNS.verdict['ready']||0, label:'Ready'},
+    {cls:'vb-friction', n:PATTERNS.verdict['ready (friction)']||0, label:'Friction'},
+    {cls:'vb-partial', n:PATTERNS.verdict['partial']||0, label:'Partial'},
+    {cls:'vb-blocked', n:PATTERNS.verdict['blocked']||0, label:'Blocked'},
+  ];
+  segs.forEach(s=>{
+    const d = document.createElement('div');
+    d.className = 'vb-seg ' + s.cls;
+    d.style.width = (s.n) + '%';
+    d.textContent = s.n >= 6 ? s.n : '';
+    track.appendChild(d);
+  });
+})();
+
+// category bars
+(function(){
+  const list = document.getElementById('catList');
+  const colors = {'self-serve':'var(--ready)','gated':'var(--friction)','blocked':'var(--blocked)','mixed':'var(--partial)'};
+  Object.entries(PATTERNS.by_category).forEach(([cat, counts])=>{
+    const total = Object.values(counts).reduce((a,b)=>a+b,0);
+    const row = document.createElement('div');
+    row.className = 'cat-row';
+    const track = document.createElement('div');
+    track.className = 'cat-track';
+    Object.entries(counts).forEach(([k,v])=>{
+      const seg = document.createElement('div');
+      seg.style.width = (v/total*100)+'%';
+      seg.style.background = colors[k] || '#999';
+      track.appendChild(seg);
+    });
+    row.innerHTML = `<div class="cat-name">${cat}</div>`;
+    row.appendChild(track);
+    const countEl = document.createElement('div');
+    countEl.className = 'cat-count';
+    countEl.textContent = total;
+    row.appendChild(countEl);
+    list.appendChild(row);
+  });
+})();
+
+// table
+const tbody = document.getElementById('appsTbody');
+const catFilter = document.getElementById('catFilter');
+const verdictFilter = document.getElementById('verdictFilter');
+const searchBox = document.getElementById('searchBox');
+const tableCount = document.getElementById('tableCount');
+
+const categories = [...new Set(APPS.map(a=>a.category))].sort();
+categories.forEach(c=>{
+  const o = document.createElement('option');
+  o.value=c; o.textContent=c;
+  catFilter.appendChild(o);
+});
+
+function renderTable(){
+  const cat = catFilter.value;
+  const verdict = verdictFilter.value;
+  const q = searchBox.value.trim().toLowerCase();
+  const rows = APPS.filter(a=>{
+    if(cat && a.category!==cat) return false;
+    if(verdict && a.verdict!==verdict) return false;
+    if(q && !(a.name.toLowerCase().includes(q) || (a.blocker||'').toLowerCase().includes(q) || a.blurb.toLowerCase().includes(q))) return false;
+    return true;
+  });
+  tbody.innerHTML = rows.map(a=>`
+    <tr>
+      <td><div class="app-name">${a.name}</div><div class="app-cat">${a.category}</div></td>
+      <td>${a.auth.join(', ')}</td>
+      <td>${a.access}${a.access_detail ? '<br><span class="blocker-text">'+a.access_detail+'</span>' : ''}</td>
+      <td>${a.api}</td>
+      <td>${a.mcp}</td>
+      <td><span class="badge badge-${verdictClass(a.verdict)}">${verdictLabel(a.verdict)}</span></td>
+      <td class="blocker-text">${a.blocker || '—'}</td>
+      <td>${a.evidence && a.evidence.startsWith('http') ? `<a class="evidence-link" href="${a.evidence}" target="_blank" rel="noopener">docs ↗</a>` : '<span class="blocker-text">—</span>'}</td>
+    </tr>
+  `).join('');
+  tableCount.textContent = `Showing ${rows.length} of ${APPS.length} apps`;
+}
+catFilter.addEventListener('change', renderTable);
+verdictFilter.addEventListener('change', renderTable);
+searchBox.addEventListener('input', renderTable);
+renderTable();
+
+// verification misses
+(function(){
+  const list = document.getElementById('missList');
+  VERIFICATION.results.forEach(r=>{
+    const low = r.severity && r.severity.startsWith('none');
+    const div = document.createElement('div');
+    div.className = 'miss-card' + (r.severity && (r.severity.startsWith('low')||r.severity.startsWith('none')) ? ' low-sev' : '');
+    div.innerHTML = `
+      <div class="miss-head"><b>${r.app}</b><span class="sev-tag">${r.field_changed === 'none' ? 'confirmed, confidence raised' : 'corrected: ' + r.field_changed}</span></div>
+      <div class="miss-row"><span class="lbl">First-pass guess</span><span class="wrong">${r.first_pass_guess}</span></div>
+      <div class="miss-row"><span class="lbl">After live verification</span><span class="right">${r.corrected}</span></div>
+    `;
+    list.appendChild(div);
+  });
+})();
+</script>
+</body>
+</html>

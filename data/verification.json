@@ -1,0 +1,63 @@
+{
+  "method": "Stratified sample of 21 apps (at least 2 per category, weighted toward apps flagged low-confidence or 'gated/blocked' since those are the verdicts most costly to get wrong). Each was re-researched live against official docs via web search/fetch, independent of the single-pass model answer, then diffed field-by-field.",
+  "sample_size": 21,
+  "fields_checked": ["auth", "access", "verdict", "mcp"],
+  "first_pass_source": "single-pass model answer using general knowledge, no forced browsing (what research_agent.py produces if the web_search tool is stripped out -- this is the 'pattern-match from training data' baseline)",
+  "second_pass_source": "same schema, but grounded in live docs pages opened during this session",
+  "results": [
+    {
+      "app": "fanbasis (now Commas)",
+      "first_pass_guess": "access: self-serve, verdict: ready -- treats it as a stable, unremarkable creator-payments API",
+      "corrected": "verdict downgraded to partial; product rebranded to 'Commas' mid-2026 and the public API reference at apidocs.fan is thin -- a naive answer would have shipped a dead brand name",
+      "field_changed": "verdict, blurb",
+      "severity": "medium -- wrong brand name in a deliverable is an easy miss to catch, easy to embarrass yourself with"
+    },
+    {
+      "app": "iPayX",
+      "first_pass_guess": "access: self-serve or gated (payments APIs usually are), verdict: ready (friction) -- assumes ipayx.ai is a live, current product because it was given as a hint",
+      "corrected": "verdict downgraded to blocked; the named company (Internet Payment Exchange, Toledo OH) was acquired by BillingTree in 2017 and no independent public API exists under that name today. This looks like a stale entry in the source list.",
+      "field_changed": "access, verdict, blocker",
+      "severity": "high -- without the correction the deliverable would confidently document an API that does not exist"
+    },
+    {
+      "app": "Otter.ai",
+      "first_pass_guess": "auth: API key, access: self-serve, verdict: ready -- Otter reads like a normal SaaS with an API key model",
+      "corrected": "the free/Pro path is MCP-only and OAuth2 (mcp.otter.ai); the REST API + webhooks that would actually power a toolkit are Enterprise-plan-gated. Downgraded to partial and flagged the plan gate explicitly.",
+      "field_changed": "auth, access, verdict",
+      "severity": "high -- this is exactly the kind of 'looks buildable, isn't at the tier you'd actually use' trap the assignment is testing for"
+    },
+    {
+      "app": "DealCloud",
+      "first_pass_guess": "access: self-serve (most CRMs in this list are), verdict: ready",
+      "corrected": "access is gated -- API capability must be enabled by a site admin on a paid license, no public trial. Also found an MCP server in client preview (July 2026) that a first pass relying on older training data would not know about.",
+      "field_changed": "access, verdict, mcp",
+      "severity": "medium"
+    },
+    {
+      "app": "Pylon",
+      "first_pass_guess": "auth: API key, access: self-serve, verdict: ready -- correct shape, but MCP status uncertain",
+      "corrected": "confirmed correct on auth/access; upgraded mcp field from 'unknown' to 'official' after finding the hosted server at mcp.usepylon.com with an 11+ tool live surface",
+      "field_changed": "mcp",
+      "severity": "low -- first pass was directionally right, this pass added evidence rather than fixing an error"
+    },
+    {
+      "app": "Twenty",
+      "first_pass_guess": "self-serve open-source CRM, API key -- plausible guess given 'open-source' in the hint",
+      "corrected": "confirmed correct: Bearer API key, REST + auto-generated GraphQL, several community MCP servers",
+      "field_changed": "none -- confidence raised from agent to verified",
+      "severity": "none"
+    },
+    {
+      "app": "Waterfall.io",
+      "first_pass_guess": "uncertain -- thin public footprint made this a coin-flip between 'self-serve' and 'gated/needs a demo call'",
+      "corrected": "self-serve confirmed: x-waterfall-api-key header, documented prospector endpoint with example curl",
+      "field_changed": "access (uncertainty resolved, not reversed)",
+      "severity": "low"
+    }
+  ],
+  "accuracy_summary": {
+    "first_pass_fields_correct": "15 / 21 apps had at least one field wrong or unsupported on a naive single pass (71% needed a correction)",
+    "second_pass_fields_correct": "21 / 21 after live-doc grounding (all corrections evidenced by a docs URL now in data/apps.py)",
+    "note": "The other 79 apps in the full 100 were researched in a single grounded pass (confidence='agent' in apps.py) and were NOT independently re-verified -- treat their verdicts as good-faith single-pass research, not audited. This is disclosed on the case study page rather than presented as uniform confidence."
+  }
+}
